@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<title>Manipulation de Vue</title>
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        background-color: #f9f9f9;
+        margin: 0;
+        padding: 0;
+    }
+
+    #monapp {
+        max-width: 600px;
+        margin: 2rem auto;
+        padding: 1.5rem;
+        background-color: #fff;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+    }
+
+    h3 {
+        color: #333;
+        margin-bottom: 0.5rem;
+    }
+
+    button {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    button:focus {
+        outline: none;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }
+
+    .counter-controls {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        column-gap: 10px;
+        margin: 1rem 0;
+    }
+
+    .counter-controls button {
+        width: 50px;
+        font-size: 1rem;
+        text-align: center;
+    }
+
+    input[type="text"] {
+        width: 100%;
+        padding: 0.5rem;
+        font-size: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        margin-top: 0.5rem;
+        margin-bottom: 1rem;
+        box-sizing: border-box;
+    }
+
+    input[type="text"]:focus {
+        border-color: #007bff;
+        outline: none;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }
+
+    .warning {
+        color: red;
+        font-weight: bold;
+        margin-top: 0.5rem;
+    }
+</style>
+</head>
+<body>
+
+<div id="monapp">
+    <h3>L'exercice 1: </h3>
+    <button @click="change">{{titre}}</button>
+
+    <h3>L'exercice 2: </h3>
+    <div class="counter-controls">
+        <button @click="plus">++</button>
+        <span>{{compteur}}</span>
+        <button @click="moins">--</button>
+    </div>
+
+    <h3>L'exercice 3: </h3>
+    <input type="text" v-model.trim="ecrire" placeholder="Entrez du texte ici...">
+    <div v-if="hasSpaces" class="warning">Ne pas saisir d'espaces!!</div>
+</div>
+
+<script>
+const appli = {
+    data() {
+        return {
+            titre: "Cliquez moi!",
+            compteur: 0,
+            ecrire: '',
+        };
+    },
+    computed: {
+        hasSpaces() {
+            return this.ecrire.includes(' ');
+        },
+    },
+    methods: {
+        change() {
+            this.titre = "Cliqué!";
+        },
+        plus() {
+            this.compteur++;
+        },
+        moins() {
+            this.compteur--;
+        },
+    },
+};
+
+Vue.createApp(appli).mount("#monapp");
+</script>
+
+</body>
+</html>
