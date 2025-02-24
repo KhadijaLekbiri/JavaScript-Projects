@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projet 1-38</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 2rem;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        fieldset {
+            border: 2px solid #000;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            background-color: #fff;
+        }
+
+        legend {
+            font-weight: bold;
+            color: #000;
+            font-size: 1.2rem;
+        }
+
+        input[type="text"] {
+            width: 95%;
+            padding: 0.5rem;
+            margin-top: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .list {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background-color: #fff;
+        }
+
+        .misEnForme {
+            background-color: #e0ffff;
+            font-family: Georgia, serif;
+            font-size: 1.2rem;
+            margin: 1rem;
+            padding: 1rem;
+            border: 1px solid #000;
+        }
+
+        button {
+            display: inline-block;
+            background-color: #000;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        button:hover {
+            background-color: #444;
+        }
+
+        .task-status {
+            font-weight: bold;
+        }
+
+        .task-status.completed {
+            color: #28a745; /* Green */
+        }
+
+        .task-status.incompleted {
+            color: #dc3545; /* Red */
+        }
+
+        div:last-of-type {
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-align: center;
+            color: #000;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <fieldset>
+            <legend>Filtrer par Titre</legend>
+            <input type="text" placeholder="Chercher une tâche..." v-model="filtreNom">
+        </fieldset>
+        <fieldset>
+            <legend>Options</legend>
+            <button @click="toggle('done')">
+                {{ done ? 'Masquer Tâches Terminées' : 'Afficher Tâches Terminées' }}
+            </button>
+            <button @click="toggle('notdone')">
+                {{ notdone ? 'Masquer Tâches Non Terminées' : 'Afficher Tâches Non Terminées' }}
+            </button>
+            <button @click="toggle('details')">
+                {{ details ? 'Masquer Description' : 'Afficher Description' }}
+            </button>
+            <button @click="toggle('mef')">
+                {{ mef ? 'Enlever Mise en Forme' : 'Appliquer Mise en Forme' }}
+            </button>
+        </fieldset>
+
+        <div class="list" 
+             v-for="task in taskList"
+             :class="{misEnForme: mef}">
+            <div v-if="(((done && task.completed) || (notdone && !task.completed)) 
+                       && (task.title.indexOf(filtreNom) >= 0 || filtreNom === ''))">
+                <strong>{{ task.title }}</strong><br>
+                <div v-if="details">{{ task.description }}</div>
+                <div 
+                    :class="{
+                        'task-status': true, 
+                        'completed': task.completed, 
+                        'incompleted': !task.completed
+                    }">
+                    {{ task.completed ? "Completed" : "Incompleted" }}
+                </div>
+                <button v-show="!task.completed" @click="update(task)">Tâche Terminée</button>
+            </div>
+        </div>
+        <div>Vous avez {{ calcul }} tâche(s) à faire !!</div>
+    </div>
+    <script>
+        const app = Vue.createApp({
+            data() {
+                return {
+                    done: true,
+                    notdone: true,
+                    details: true,
+                    mef: false,
+                    filtreNom: '',
+                    taskList: [
+                        {
+                            id: 1,
+                            title: "Faire les courses",
+                            description: "Acheter des légumes et du lait.",
+                            completed: false
+                        },
+                        {
+                            id: 2,
+                            title: "Faire du sport",
+                            description: "Courir pendant 30 minutes.",
+                            completed: true
+                        },
+                        {
+                            id: 3,
+                            title: "Réviser pour l'examen",
+                            description: "Relire le chapitre 5 du manuel.",
+                            completed: false
+                        }
+                    ]
+                };
+            },
+            computed: {
+                calcul() {
+                    return this.taskList.filter(task => !task.completed).length;
+                }
+            },
+            methods: {
+                update(task) {
+                    task.completed = true;
+                },
+                toggle(option) {
+                    this[option] = !this[option];
+                }
+            },
+        });
+        app.mount('#app');
+    </script>
+</body>
+
+</html>
